@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h2>{{ user.user_name }}</h2>
+
+    {% for course in courses %}
+    {{ course.course_id }}
+    {{ course.course_name }}
+    {{ course.course_code }}
+    {{ course.description }} &nbsp; <a href="/edit_courses/{{ user.user_name }}/{{ course.course_id }}">Edit Course</a> &nbsp;
+    <a href="/delete_courses/{{ course.course_id }}/{{ user.user_name }}">Delete Course</a>
+    {% endfor %}
+
+    <h4>Examiners</h4>
+    {% for user in users %}
+        {% if user.role == 'examiner' %}
+            {{ user.user_name }}&nbsp; <a href="/approve"><button>Approve</button></a>
+        {% endif %}
+    {% endfor %}
+
+    <h4>Students</h4>
+    {% for user in users %}
+        {% if user.role == 'student' %}
+            {{ user.user_name }}
+        {% endif %}
+    {% endfor %}
+    <a href="/add_course/{{ user.user_name }}"><button>Add Courses</button></a>
+</body>
+</html>
