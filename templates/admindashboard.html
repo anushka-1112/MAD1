@@ -8,6 +8,11 @@
 <body>
     <h2>{{ user.user_name }}</h2>
 
+    <form action="/search" method="post">
+        <input type="text" name="searched_string" placeholder="Enter to search" required>
+        <button type="submit" value="Search"> Search </button>
+    </form>
+
     {% for course in courses %}
     {{ course.course_id }}
     {{ course.course_name }}
@@ -17,18 +22,24 @@
     {% endfor %}
 
     <h4>Examiners</h4>
-    {% for user in users %}
-        {% if user.role == 'examiner' %}
-            {{ user.user_name }}&nbsp; <a href="/approve"><button>Approve</button></a>
+    {% for examiner in users %}
+        {% if examiner.role == 'examiner' %}
+            {{ examiner.user_name }}&nbsp; <a href="/approve/{{ examiner.user_id }}/{{ user.user_name }}"><button>Approve</button></a>
         {% endif %}
     {% endfor %}
 
     <h4>Students</h4>
-    {% for user in users %}
-        {% if user.role == 'student' %}
-            {{ user.user_name }}
+    {% for student in users %}
+        {% if student.role == 'student' %}
+            {{ student.user_name }}
         {% endif %}
+    {% endfor %}<br>
+
+    <h4>Examinations</h4>
+    {% for exam in exams %}
+        {{ exam.exam_name }}<a href="/assign/{{exam.exam_id}}"><button>Assign</button></a>
     {% endfor %}
-    <a href="/add_course/{{ user.user_name }}"><button>Add Courses</button></a>
+    <a href="/add_course/{{ user.user_name }}"><button>Add Courses</button></a><br>
+    <a href="/add_exam/{{ user.user_name }}"><button>Add Exams</button></a>
 </body>
 </html>

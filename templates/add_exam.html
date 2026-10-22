@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Exam</title>
+</head>
+<body>
+    <form method="post" action="/add_exam/{{ user.user_name }}">
+        <input type="hidden" name="user_details" value="{{ user.user_name }}">
+        <label for="exam_name"> Exam Name</label>
+        <input type="text" name="exam_name" required><br>
+        <label for="exam_type"> Exam Type</label>
+        <input type="text" name="exam_type" required><br>
+        <label for="duration"> duration</label>
+        <input type="text" name="duration"><br>
+        <label for="max_marks"> max_marks</label>
+        <input type="text" name="max_marks"><br>
+        
+        <label for="course_id">Course</label>
+        {% for course in courses %}
+        <input type="radio" name="course_id" value="{{course.course_id}}"> {{ course.course_name }} &nbsp;
+        {% endfor %}
+
+        <input type="submit" value="Add Exam">
+    </form>
+</body>
+</html>
