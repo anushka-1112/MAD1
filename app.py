@@ -40,18 +40,29 @@ def admin_dashboard(user_details):
     courses = Courses.query.all()
     users = User.query.all()
     exams = Examination.query.all()
+    timelines=Timeline.query.all()
     return render_template("admindashboard.html", user = user, courses=courses, users = users,
-                           exams= exams)
+                           exams= exams, timelines=timelines)
 
 @app.route('/studentdashboard/<user_details>')
 def studentdashboard(user_details):
+    #exams= Examination.query.all()
     user = User.query.filter_by(user_name = user_details).first()
+    #slots = Slot.query.filter_by(user_id = user.user_id).all()
     return render_template("studentdashboard.html", user = user)
 
 @app.route('/examinerdashboard/<user_details>')
 def examinerdashboard(user_details):
     user = User.query.filter_by(user_name = user_details).first()
-    return render_template("examinerdashboard.html", user = user)
+    exams= Examination.query.filter_by(user_id=user.user_id).all()
+    slots=[]
+    timelines=[]
+    for exam in exams:
+        s = Slot.query.filter_by(exam_id=exam.exam_id).all()
+        t=Timeline.query.filter_by(exam_id=exam.exam_id).all()
+        slots=slots+s
+        timelines=timelines+t
+    return render_template("examinerdashboard.html", user = user, exams=exams, slots=slots, timelines=timelines)
 
 @app.route('/add_course/<user_details>', methods=['GET', 'POST'])
 def add_course(user_details):
@@ -157,6 +168,47 @@ def assign_exam(exam_id):
         db.session.commit()
         return redirect(url_for("admin_dashboard", user_details='Admin'))
     return render_template('assign.html', examiners = examiners, exam_id=exam_id)
+
+# Can configure examination timelines.
+@app.route('/timeline/<user_details>/<exam_id>', methods=['GET', 'POST'])
+def configure_timeline(user_details, exam_id):
+    if request.method =='POST':
+        slot_start=request.form.get('slot_start')
+        slot_end=request.form.get('slot_end')
+        booking_deadline=request.form.get('booking_deadline')
+        t = Timeline(slot_start=slot_start,
+                     slot_end=slot_end,
+                     booking_deadline=booking_deadline,
+                     exam_id=exam_id)
+        db.session.add(t)
+        db.session.commit()
+        return redirect(url_for("admin_dashboard", user_details=user_details))
+
+    return render_template('timeline.html', user_details=user_details,
+                           exam_id=exam_id)
+
+@app.route('/open_slots/<timeline_id>/<admin_details>', methods=['GET'])
+def open_slots(timeline_id, admin_details):
+    timeline = Timeline.query.filter_by(timeline_id = timeline_id).update(dict(slot_open = True))
+    db.session.commit()
+    return redirect(url_for("admin_dashboard", user_details=admin_details))
+
+@app.route('/create_slot/<user_details>/<exam_id>', methods=['GET', 'POST'])
+def add_slots(user_details, exam_id):
+    user=User.query.filter_by(user_name=user_details).first()
+    exam = Examination.query.filter_by(exam_id=exam_id).first()
+    if request.method=='POST':
+        slot = Slot(
+            exam_id = exam_id,
+            user_id = user.user_id,
+            slot_date = request.form.get('slot_date'),
+            slot_time = request.form.get('slot_time')
+        )
+        db.session.add(slot)
+        db.session.commit()
+        return redirect(url_for("examinerdashboard", user_details=user.user_name))
+    return render_template('slot.html', user=user, exam=exam)
+
 
 if __name__=="__main__":
     app.run()

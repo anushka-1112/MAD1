@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Timeline</title>
+</head>
+<body>
+    <form action="/timeline/{{ user_details }}/{{exam_id}}" method="post">
+        <label for="slot_start">Slot Start</label>
+        <input type="date" name="slot_start">
+        <label for="slot_end">Slot End</label>
+        <input type="date" name="slot_end">
+        <label for="booking_deadline">Booking Deadline</label>
+        <input type="date" name="booking_deadline">
+        <input type="submit" value="Save Timeline">
+    </form>
+</body>
+</html>

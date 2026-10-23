@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Timeline</title>
+</head>
+<body>
+    <form action="/create_slot/{{ user.user_name }}/{{exam.exam_id}}" method="post">
+        <label for="slot_date">Slot Date</label>
+        <input type="date" name="slot_date">
+        <label for="slot_time">Slot Time</label>
+        <input type="time" name="slot_time">
+        <input type="submit" value="Create Slot">
+    </form>
+</body>
+</html>

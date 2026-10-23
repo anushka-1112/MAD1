@@ -38,6 +38,12 @@
     <h4>Examinations</h4>
     {% for exam in exams %}
         {{ exam.exam_name }}<a href="/assign/{{exam.exam_id}}"><button>Assign</button></a>
+        <a href="/timeline/{{ user.user_name }}/{{ exam.exam_id }}"><button>Create Timeline</button></a>
+        {% for timeline in timelines %}
+            {% if timeline['exam_id'] == exam['exam_id'] %}
+                {{ timeline.slot_start }} {{ timeline.slot_end }} <a href="/open_slots/{{timeline.timeline_id}}/{{user.user_name}}"><button>Open Timeline</button></a>
+            {% endif %}
+        {% endfor %}
     {% endfor %}
     <a href="/add_course/{{ user.user_name }}"><button>Add Courses</button></a><br>
     <a href="/add_exam/{{ user.user_name }}"><button>Add Exams</button></a>

@@ -11,5 +11,26 @@
     {% else %}
         <h2>Not Approved By Admin Yet.</h2>
     {% endif %}
+
+    <h4>Examinations</h4>
+    {% for exam in exams %}
+        {{ exam.exam_name }}
+        {% for timeline in timelines %}
+            {% if timeline['exam_id'] == exam['exam_id'] %}
+                {{ timeline.slot_start }} {{ timeline.slot_end }} 
+                <a href="/edit_timeline/{{ user.user_name }}/{{ exam.exam_id }}"><button>Edit Timeline</button></a>
+                {% if timeline.slot_open %}
+                    <a href="/create_slot/{{ user.user_name }}/{{ exam.exam_id}}"><button>Create Slot</button></a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
+    <h4>Slots</h4>
+    {% for slot in slots %}
+        {{ slot.slot_date }}
+        {{ slot.slot_time }}
+    {% endfor %}
+    
 </body>
 </html>

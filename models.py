@@ -24,3 +24,24 @@ class Examination(db.Model):
     duration = db.Column(db.String(20))
     max_marks = db.Column(db.String(20))
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=True)
+#exam= Examination.query.filter_by(user_id=examiner_id).all()
+class Timeline(db.Model):
+    timeline_id = db.Column(db.Integer, primary_key=True)
+    exam_id = db.Column(db.Integer, db.ForeignKey('examination.exam_id'), unique=True)
+    slot_start = db.Column(db.String(20))
+    slot_end = db.Column(db.String(20))
+    booking_deadline = db.Column(db.String(20))
+    slot_open = db.Column(db.Boolean(), default=False)
+    booking_open = db.Column(db.Boolean(), default=False)
+
+class Slot(db.Model):
+    slot_id = db.Column(db.Integer, primary_key=True)
+    exam_id = db.Column(db.Integer, db.ForeignKey('examination.exam_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    slot_date = db.Column(db.String(20))
+    slot_time = db.Column(db.String(20))
+
+
+#user_id ->examiner = Examination(assign), ExaminationRubrics(exam evaluation)
+
+#user -> studnet = Slot(to give exam)
